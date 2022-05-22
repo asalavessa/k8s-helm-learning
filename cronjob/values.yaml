@@ -1,0 +1,9 @@
+deployment:
+  image: "busybox"
+  tag: "1.28"
+name: example-cronjob
+schedule: "* * * * *"
+concurrencyPolicy: "Forbid"
+successfulJobsHistoryLimit: 2
+failedJobsHistoryLimit: 2
+restartPolicy: "OnFailure"

@@ -1,0 +1,23 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Values.name }}
+spec:
+  schedule: {{ .Values.schedule | quote }}
+  concurrencyPolicy: {{ .Values.concurrencyPolicy }}
+  successfulJobsHistoryLimit: {{ .Values.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ .Values.name }}
+            image: {{ .Values.deployment.image }}:{{ .Values.deployment.tag }}
+            imagePullPolicy: IfNotPresent
+            command: ["/bin/sh","-c"]
+            args: ["date; echo Hello from the Kubernetes cluster && ping localhost:5432"]
+            envFrom:
+            - configMapRef:
+                name: cronjob-config
+          restartPolicy: {{ .Values.restartPolicy }}
